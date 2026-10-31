@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Arabic Words</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0d1117;
+      --text-color: #e6edf3;
+      --accent-glow: rgba(88, 166, 255, 0.2);
+    }
+    
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    a {
+      text-decoration: none !important;
+    }
+
+    table {
+      display: block;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto 30px auto !important;
+      border-collapse: collapse;
+    }
+
+    tbody {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      width: 100%;
+    }
+
+    tr { display: contents; }
+    td { display: block; padding: 0 !important; }
+
+    .myButton {
+      width: 100%;
+      height: 100%;
+      min-height: 80px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      
+      /* Perbaikan Outline untuk huruf Arab */
+      color: #ffffff;
+      /* Menggunakan berlapis text-shadow untuk membuat outline utuh tanpa memotong sambungan huruf */
+      text-shadow: 
+        -1px -1px 0 #000,  
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0px -1px 0 #000,
+         0px  1px 0 #000,
+        -1px  0px 0 #000,
+         1px  0px 0 #000,
+         2px  2px 5px rgba(0, 0, 0, 0.8); /* Bayangan tambahan agar terlihat elegan */
+      
+      font-size: 2.8rem;
+      font-family: 'Amiri', serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+    }
+
+    .myButton:active {
+      transform: scale(0.95);
+    }
+
+    #tombolTambah {
+      margin-top: 40px;
+    }
+
+    #Tombol {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 15px 40px;
+      min-height: auto;
+      width: auto;
+      display: inline-block;
+      letter-spacing: 1px;
+      /* Untuk font Latin tidak masalah menggunakan text-stroke, tapi disamakan agar konsisten */
+      text-shadow: 
+        -1px -1px 0 #000,  
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Random Arabic Words</h1>
+
+  <div id="isi"></div>
+  <div id="tombolTambah">
+    <span id="tambah"></span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/gh/swrdfgd/Random-Link/arabWords.js"></script>
+
+  <script>
+    function getRandomColor() {
+      const letters = '0123456789abcdef';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function createTable(n) {
+      let tbody = '';
+      let k = 0;
+      
+      for (let i = 0; i < 5; i++) {
+        tbody += '<tr>';
+        for (let j = 0; j < 5; j++) {
+            tbody += `<td><a target="_blank" id="Tabel${n}Nomor${k}"></a></td>`;
+            k++;
+        }
+        tbody += '</tr>\n';
+      }
+      return `<table border="0" style="text-align:center; margin-left: auto; margin-right: auto;" cellpadding="15">\n${tbody}</table>`;
+    }
+
+    let banyakTabel = 1;
+    let daftarLink = [];
+
+    function refreshDaftarlink() {
+      const pilihanKata = kataArab[Math.floor(Math.random() * kataArab.length)]; 
+      
+      if (pilihanKata && pilihanKata.length > 0) {
+        daftarLink = [
+          [pilihanKata, 'https://context.reverso.net/%D8%A7%D9%84%D8%AA%D8%B1%D8%AC%D9%85%D8%A9/%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-%D8%A7%D9%84%D8%A5%D9%86%D8%AC%D9%84%D9%8A%D8%B2%D9%8A%D8%A9/' + pilihanKata],
+          [pilihanKata, 'http://arabiclexicon.hawramani.com/search/' + pilihanKata]
+        ];
+      } else {
+        daftarLink = [['', '']];
+      }
+    }
+      
+    function buatTabel() {
+      document.getElementById('isi').innerHTML += createTable(banyakTabel);
+      
+      for (let j = 0; j < 25; j++) {
+        refreshDaftarlink();
+        const pilihanLink = daftarLink[Math.floor(Math.random() * daftarLink.length)];
+        const warna1 = getRandomColor();
+        const warna2 = getRandomColor();
+        const warna3 = getRandomColor();
+        
+        const elemenA = document.getElementById(`Tabel${banyakTabel}Nomor${j}`);
+        elemenA.setAttribute("href", pilihanLink[1]);
+        
+        elemenA.innerHTML = `<button class="myButton" 
+          onmouseover="this.style.backgroundColor='${warna2}'" 
+          onmouseout="this.style.backgroundColor='${warna3}'" 
+          style="background-color: ${warna1}">${pilihanLink[0]}</button>`;
+      }
+      banyakTabel++;
+    }
+
+    function init() {
+      const warna1 = getRandomColor();
+      const warna2 = getRandomColor();
+      const warna3 = getRandomColor();
+      
+      document.getElementById('tambah').innerHTML = `<button onclick="buatTabel()" class="myButton" id="Tombol" 
+        onmouseover="this.style.backgroundColor='${warna2}'" 
+        onmouseout="this.style.backgroundColor='${warna3}'" 
+        style="background-color: ${warna1}">More...</button>`;
+        
+      buatTabel();
+    }
+
+    init();
+  </script>
+</body>
+</html>
